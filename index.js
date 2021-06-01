@@ -38,6 +38,10 @@ app.get("/authenticate/email", (req, res) => {
   res.status(200).sendFile("./HTML-Pages/EmailPage.html", { root: '.' })
 })
 
+app.get("/authenticate/email-sent", (req, res) => {
+  res.status(200).sendFile("./HTML-Pages/EmailSent.html", { root: '.' })
+})
+
 app.post("/authenticate/details", async (req, res) => {
   try {
     console.log(req.body)

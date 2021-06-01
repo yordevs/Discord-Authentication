@@ -42,7 +42,7 @@
     function sendInfo() {
       let email = document.getElementById("email-input").value;
       let discord_id = window.localStorage.getItem("discord_id");
-      fetch("http://localhost:4000/authenticate/details", {
+      fetch("http://droplet.yordevs.com:4000/authenticate/details", {
         method: "POST",
         headers: {
           'Accept': 'application/json',
@@ -54,6 +54,7 @@
         })
       }).then((response) => {
         document.getElementById("email-form").innerHTML = "Email Sent"
+        window.location.replace("http://droplet.yordevs.com/authenticate/email-sent")
       }).catch(err => {
         console.log(err)
       })
