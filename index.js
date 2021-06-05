@@ -1,4 +1,8 @@
-require("dotenv").config()
+if (process.env.ENVIRONMENT === "develop") {
+  require('dotenv').config({ path: 'develop.env'})
+} else {
+  require("dotenv").config()
+}
 
 const express = require("express");
 const { sendEmail } = require("./Helpers/MailHelper")
