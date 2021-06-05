@@ -77,7 +77,7 @@ client.on('message', message => {
       message.channel.send(`${user} University Of York Student Verified`)
     } else {
       let user = message.member.user;
-      message.channel.send(`${user} you haven't verified your york email, please do so using this link: http://droplet.yordevs.com:4000/authenticate/discord`)
+      message.channel.send(`${user} you haven't verified your york email, please do so using this link: http://${process.env.HOST}/authenticate/discord`)
     }
   }
 })
