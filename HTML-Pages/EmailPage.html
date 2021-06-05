@@ -1,65 +1,86 @@
 <!DOCTYPE html>
 <html>
+	<head>
+		<title>My Discord OAuth2 App</title>
+		<link rel="preconnect" href="https://fonts.gstatic.com" />
+		<link
+			href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap"
+			rel="stylesheet"
+		/>
+		<link rel="stylesheet" type="text/css" href="styles.css" />
+	</head>
 
-<head>
-  <title>My Discord OAuth2 App</title>
-</head>
+	<body>
+		<div class="container">
+			<form id="email-form" onsubmit="return sendInfo();">
+				<label for="email-input">York Email</label>
+				<input type="text" placeholder="username@york.ac.uk"
+				name="email-input"" id="email-input" />
+				<input
+					type="submit"
+					value="Submit"
+					class="button"
+					id="submit-button"
+				/>
+			</form>
+		</div>
+		<script>
+			window.onload = () => {
+				const fragment = new URLSearchParams(
+					window.location.hash.slice(1)
+				);
+				const [accessToken, tokenType] = [
+					fragment.get("access_token"),
+					fragment.get("token_type"),
+				];
 
-<body>
-  <div id="info">
-  </div>
-  <div id="email-form">
-    <form onsubmit="return sendInfo();">
-      <label for="email-input">Full York Email</label>
-      <input type="text" placeholder="Type here" id="email-input" />
-      <input type="submit" value="Submit" />
-    </form>
-  </div>
-  <script>
-    window.onload = () => {
-      const fragment = new URLSearchParams(window.location.hash.slice(1));
-      const [accessToken, tokenType] = [fragment.get('access_token'), fragment.get('token_type')];
+				if (!accessToken) {
+					return (document.getElementById("login").style.display =
+						"block");
+				}
 
-      if (!accessToken) {
-        return document.getElementById('login').style.display = 'block';
-      }
-
-      fetch('https://discord.com/api/users/@me', {
-        headers: {
-          authorization: `${tokenType} ${accessToken}`,
-        },
-      })
-        .then(result => result.json())
-        .then(response => {
-          const { username, discriminator, id } = response;
-          document.getElementById('info').innerText += ` Thanks for authenticating your discord ${username}`;
-          window.localStorage.setItem("discord_id", id)
-        })
-        .catch(console.error);
-    };
-  </script>
-  <script>
-    function sendInfo() {
-      let email = document.getElementById("email-input").value;
-      let discord_id = window.localStorage.getItem("discord_id");
-      fetch(`http://${process.env.HOST}/authenticate/details`, {
-        method: "POST",
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          email: email,
-          discord_id: discord_id
-        })
-      }).then((response) => {
-        document.getElementById("email-form").innerHTML = "Email Sent"
-        window.location.replace(`http://${process.env.HOST}/authenticate/email-sent`)
-      }).catch(err => {
-        console.log(err)
-      })
-    }
-  </script>
-</body>
-
+				fetch("https://discord.com/api/users/@me", {
+					headers: {
+						authorization: `${tokenType} ${accessToken}`,
+					},
+				})
+					.then((result) => result.json())
+					.then((response) => {
+						const { username, discriminator, id } = response;
+						document.getElementById(
+							"info"
+						).innerText += ` Thanks for authenticating your discord ${username}`;
+						window.localStorage.setItem("discord_id", id);
+					})
+					.catch(console.error);
+			};
+		</script>
+		<script>
+			function sendInfo() {
+				let email = document.getElementById("email-input").value;
+				let discord_id = window.localStorage.getItem("discord_id");
+				fetch(`http://${process.env.HOST}/authenticate/details`, {
+					method: "POST",
+					headers: {
+						Accept: "application/json",
+						"Content-Type": "application/json",
+					},
+					body: JSON.stringify({
+						email: email,
+						discord_id: discord_id,
+					}),
+				})
+					.then((response) => {
+						document.getElementById("email-form").innerHTML =
+							"Email Sent";
+						window.location.replace(
+							`http://${process.env.HOST}/authenticate/email-sent`
+						);
+					})
+					.catch((err) => {
+						console.log(err);
+					});
+			}
+		</script>
+	</body>
 </html>
